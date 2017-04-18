@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>requestAnimationFrame</title>
+  <style type="text/css">
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #757575;
+      color: #f2f2f2;
+      text-align: center;
+      font-size: 13px;
+      margin: 0;
+      padding: 0;
+    }
+
+    #box {
+      width: 1000px;
+      height: 200px;
+      margin: 0 auto;
+      border: 1px solid #ff6700;
+      background-color: #fff;
+      color: #333;
+      font-size: 22px;
+      line-height: 60px;
+    }
+  </style>
+</head>
+<body>
+  <h1>控制requestAnimationFrame 执行速度</h1>
+  <div id="box"></div>
+  <script type="text/javascript">
+    var fps = 1;
+    var config = {
+      "gloableID": "",
+      "now": "",
+      "delta": "",
+      "count": 0,
+      "then": Date.now(),
+      "interval": 1000/fps,
+      "box": document.getElementById('box')
+    };
+
+    // 兼容
+    window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+    function tick(){
+        config.gloableID = requestAnimationFrame(tick);
+        config.now = Date.now();
+  　　config.delta = config.now - config.then;
+  　　if (config.delta > config.interval) {
+            config.count += 1;
+  　　　config.then = config.now - (config.delta % config.interval);
+            config.box.innerHTML = "现在时间："+new Date().getHours()+":"+new Date().getMinutes()+":"+new Date().getSeconds()+"<br>距离上一次执行相差：" + (config.delta/1000) + "s<br>现在是第"+config.count+"次执行";
+         };
+      };
+
+      tick();
+
+      setTimeout(function(){
+        cancelAnimationFrame(config.gloableID);
+      }, 30000);
+  </script>
+</body>
+</html>
